@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchAndUpdateData() {
-    fetch('./standings.json')
+    fetch('/api/standings')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
