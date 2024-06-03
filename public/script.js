@@ -1,33 +1,13 @@
-document.addEventListener('DOMContentLoaded', () => {
-    fetchAndUpdateData(); // Fetch data when page loads
+const { execFile } = require('child_process');
+const path = require('path');
 
-    document.getElementById('updateButton').addEventListener('click', () => {
-        fetchAndUpdateData(); // Fetch data when button is clicked
+module.exports = (req, res) => {
+    const scraperPath = path.join(__dirname, 'scraper.py');
+    execFile('python3', [scraperPath], (error, stdout, stderr) => {
+        if (error) {
+            res.status(500).json({ error: 'Error executing scraper' });
+            return;
+        }
+        res.status(200).json(JSON.parse(stdout));
     });
-});
-
-function fetchAndUpdateData() {
-    fetch('/api/standings')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const tableBody = document.querySelector('#standings-table tbody');
-            tableBody.innerHTML = ''; // Clear existing table rows
-            data.forEach(driver => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${driver.rank}</td>
-                    <td>${driver.driver}</td>
-                    <td>${driver.team}</td>
-                    <td>${driver.wins}</td>
-                    <td>${driver.points}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Fetching error:', error));
-}
+};

@@ -29,12 +29,6 @@ def scrape_f1_standings():
 
     return standings
 
-def handler(event, context):
+if __name__ == "__main__":
     standings = scrape_f1_standings()
-    return {
-        "statusCode": 200,
-        "body": json.dumps(standings),
-        "headers": {
-            "Content-Type": "application/json"
-        }
-    }
+    print(json.dumps(standings))
