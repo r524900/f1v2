@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('./standings.json')  // Correct path since it's in the same directory
+    fetchAndUpdateData(); // Fetch data when page loads
+
+    document.getElementById('updateButton').addEventListener('click', () => {
+        fetchAndUpdateData(); // Fetch data when button is clicked
+    });
+});
+
+function fetchAndUpdateData() {
+    fetch('./standings.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -8,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             const tableBody = document.querySelector('#standings-table tbody');
+            tableBody.innerHTML = ''; // Clear existing table rows
             data.forEach(driver => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -21,4 +30,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => console.error('Fetching error:', error));
-});
+}
